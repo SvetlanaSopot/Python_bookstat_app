@@ -2,13 +2,15 @@
 import xml.dom.minidom
 import re
 from database_connector import Database
+import logger_mod
+
 
 # calculation of statistics for all books entering the directory
 class StatisticsCalculator:
     def calculate_book_statistic(self, input_file):  # collection of general statistics for all incoming books
         database = Database()
         print('Calculate statistics for ' + input_file)
-
+        logger_mod.logging.info('Calculate statistics for ' + input_file)
         doc = xml.dom.minidom.parse(input_file)
 
         p = doc.getElementsByTagName("p")
@@ -34,7 +36,7 @@ class StatisticsCalculator:
                 count_p += count_text  # add a text variable between paragraphs to the variable for counting paragraphs
                 count_text = 0  # and before the new iteration we nullify the variable
 
-            word_text = p_t.split()   # for words count we divided text on words
+            word_text = p_t.split()  # for words count we divided text on words
 
             for w in range(len(word_text)):
                 if word_text[w].istitle() is True:
@@ -51,8 +53,6 @@ class StatisticsCalculator:
                 upperl = 0
                 lowercasel = 0
 
-
-
         bookt = doc.getElementsByTagName("book-title")
         # print ("%d bookt" % bookt.length)
         for title in bookt:
@@ -67,13 +67,14 @@ class StatisticsCalculator:
         print("Words in lowercase:", count_low)
         database.add_book_statistics(book_name, p.length, count_p_w, count_p, count_upp, count_low)
 
-    def calculate_book_word_count(self, book_id, input_file):   # collection information for each book in the directory
+
+    def calculate_book_word_count(self, book_id, input_file):  # collection information for each book in the directory
         database = Database()
         print('Calculate word counts for ' + input_file)
 
         doc = xml.dom.minidom.parse(input_file)
-        print(doc.nodeName)
-        print(doc.firstChild.tagName)
+        #print(doc.nodeName)
+        #print(doc.firstChild.tagName)
 
         p = doc.getElementsByTagName("p")
 
@@ -84,7 +85,7 @@ class StatisticsCalculator:
             alltext = " ".join(z.nodeValue for z in text.childNodes if z.nodeType == z.TEXT_NODE)
             p_t = str(alltext)  # меняем тип на строковый
 
-           # text_string = p_t.lower()
+            # text_string = p_t.lower()
             match_pattern = re.findall(r'\b[а-яА-Я]{1,15}\b', p_t)
 
             for word in match_pattern:
@@ -95,5 +96,6 @@ class StatisticsCalculator:
                     count = frequency.get(word, 0)
                     frequency[word] = count + 1
 
-        database.add_book_word_counts(book_id, frequency, frequency_upp)
+        database.add_book_word_counts(book_id, frequency)
+
         return

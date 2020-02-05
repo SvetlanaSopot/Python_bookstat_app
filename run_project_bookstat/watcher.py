@@ -4,7 +4,7 @@ from statistics_calculator import StatisticsCalculator
 import os
 import shutil
 import time
-
+import logger_mod
 
 class Watcher:   # Scanning input directory for new .fb2 files, moving incorrect files into incorrect_input directory
     def rchop(self, string, ending):
@@ -20,17 +20,19 @@ class Watcher:   # Scanning input directory for new .fb2 files, moving incorrect
         #  Process of scanning repeated in 5 second
         while True:
             print('Scanning directory ' + directory + ' for new fb2 files...')
-
+            logger_mod.logging.info('Scanning directory ' + directory + ' for new fb2 files...')
             for node in os.listdir(directory):
                 if not node.endswith(".fb2"):
                     print('Wrong file detected' + node + ', trying to move wrong file into directory '
                           + wrong_files_directory)
+                    logger_mod.logging.info('Wrong file detected ' + node + ' for new fb2 files...'
+                                            + wrong_files_directory)
                     shutil.move(os.path.join(directory, node),
                                 os.path.join(wrong_files_directory, node))
                 elif node not in processed_files:
 
                     print('New .fb2 file detected ' + node)
-
+                    logger_mod.logging.info('New .fb2 file detected ' + node)
                     statistics_calculator.calculate_book_statistic(directory + '/' + node)
                     statistics_calculator.calculate_book_word_count(self.rchop(node, '.fb2'), directory + '/' + node)
                     processed_files.append(node)

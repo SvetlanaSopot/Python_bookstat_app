@@ -1,5 +1,6 @@
 # Imports for Database class
 import sqlite3
+import logger_mod
 
 
 # Bookstatbase connection, create and populate tables
@@ -11,25 +12,23 @@ class Database:
 
         return conn
 
-    def add_book_word_counts(self, book_id, counts, counts_upp):   # Insert calculated data into a new table
+    def add_book_word_counts(self, book_id, counts):   # Insert calculated data into a new table
         self.initialize_book_new_table(book_id)
 
         conn = self.connection()
         cursor = conn.cursor()
 
         for words in counts.keys():
-            if words in counts_upp.keys():
-                for word_q in words:
-                    st = counts_upp[word_q]
-                    #print(words, counts[words])
-                    add_counts = [(words, counts[words], st)]
-                    cursor.executemany("INSERT INTO \"" + book_id + "\" VALUES (?,?,?)", add_counts)
+          #  print(words, counts[words])
+            add_counts = [(words, counts[words], 0)]
+            cursor.executemany("INSERT INTO \"" + book_id + "\" VALUES (?,?,?)", add_counts)
 
         conn.commit()
 
+
     def initialize_book_new_table(self, table_name):   # initialize of new table
         print('Create books new table with name ' + table_name)
-
+        logger_mod.logging.info("Table " + table_name + " creation process...")
         conn = self.connection()
         cursor = conn.cursor()
 
@@ -37,18 +36,22 @@ class Database:
             cursor.execute("""CREATE TABLE \"""" + table_name + """\" (word text, count INT, count_uppercase INT)""")
             conn.commit()
             print('Table ' + table_name + ' successfully created!')
+            logger_mod.logging.info('Table ' + table_name + ' successfully created!')
         except sqlite3.OperationalError:
             print('Table ' + table_name + ' is already created!')
+            logger_mod.logging.info('Table ' + table_name + ' is already created!')
 
 
 
     def initialize(self):   # create tables in Bookststbase
         print('Initializing database structure...')
+        logger_mod.logging.info('Initializing database structure...')
 
         conn = self.connection()
         cursor = conn.cursor()
 
         print('Create books info table')
+        logger_mod.logging.info('Create books info table')
 
         try:
             cursor.execute("""CREATE TABLE BOOKSINFO
@@ -59,6 +62,7 @@ class Database:
             cursor.execute("CREATE UNIQUE INDEX User ON BOOKSINFO(book_name, number_of_paragraph)")
             conn.commit()
             print('Initialization completed')
+            logger_mod.logging.info('Initialization completed')
         except sqlite3.OperationalError:
             cursor.execute("SELECT * FROM BOOKSINFO")
 
@@ -77,3 +81,4 @@ class Database:
         except sqlite3.IntegrityError:
             pass
             print('Unique constraint: This book statistic is already exist')
+            logger_mod.logging.info('Unique constraint: This book statistic is already exist')
