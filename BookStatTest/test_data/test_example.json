@@ -1,0 +1,35 @@
+{
+  "tests": [
+    {
+      "name": "Check table 'BOOKSINFO' for data existing",
+      "query": "SELECT count(*) FROM BOOKSINFO",
+      "expected": 2
+    },
+    {
+      "name": "Check table 'BOOKSINFO' for data duplicate",
+      "query": "SELECT COUNT (*) FROM (SELECT count(*) FROM BOOKSINFO GROUP BY book_name HAVING count(*) > 1)",
+      "expected": 0
+    },
+    {
+      "name": "Check table 'Example' for data existing",
+      "query": "SELECT count(*) FROM Example",
+      "expected": 13943
+    },
+    {
+      "name": "Check table 'BOOKSINFO' for the absence of NULL values in the fields",
+      "query": "SELECT count(*) FROM BOOKSINFO where book_name is null or number_of_letters is null or number_of_paragraph is null or number_of_words is null or words_in_lowercase is null or words_with_capital_letters is null",
+
+      "expected": 0
+    },
+    {
+      "name": "Check table 'Example' for the absence of NULL values in the fields",
+      "query": "SELECT count(*) FROM Example where word is null or count is null or count_uppercase is null",
+      "expected": 0
+    },
+    {
+      "name": "Check table 'Example' for data duplicate",
+      "query": "SELECT COUNT (*) FROM (SELECT count(*) FROM Example GROUP BY word HAVING count(*) > 1)",
+      "expected": 0
+    }
+  ]
+}

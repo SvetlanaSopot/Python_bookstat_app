@@ -79,7 +79,7 @@ class StatisticsCalculator:
         p = doc.getElementsByTagName("p")
 
         frequency = {}
-        frequency_upp = {}
+
 
         for text in p:
             alltext = " ".join(z.nodeValue for z in text.childNodes if z.nodeType == z.TEXT_NODE)
@@ -89,13 +89,13 @@ class StatisticsCalculator:
             match_pattern = re.findall(r'\b[а-яА-Я]{1,15}\b', p_t)
 
             for word in match_pattern:
-                if word.istitle() is True:
-                    count_upp = frequency_upp.get(word, 0)
-                    frequency_upp[word] = count_upp + 1
+                if word.isupper() is True:
+                    count_upp = frequency.get(word, 0)
+                    frequency[word] = count_upp + 1
                 else:
                     count = frequency.get(word, 0)
                     frequency[word] = count + 1
 
-        database.add_book_word_counts(book_id, frequency)
+        database.add_book_word_counts(book_id, frequency, frequency)
 
         return

@@ -1,0 +1,28 @@
+
+
+Testing of C:\Users\sviatlana_sopat\PycharmProjects\run_project_bookstat\BookStatTest\test_data\test_example.json was started
+
+
+Test case 'Check table 'BOOKSINFO' for data existing'
+PASS. Result is '2' as expected
+	Query: SELECT count(*) FROM BOOKSINFO
+
+Test case 'Check table 'BOOKSINFO' for data duplicate'
+PASS. Result is '0' as expected
+	Query: SELECT COUNT (*) FROM (SELECT count(*) FROM BOOKSINFO GROUP BY book_name HAVING count(*) > 1)
+
+Test case 'Check table 'Example' for data existing'
+PASS. Result is '13943' as expected
+	Query: SELECT count(*) FROM Example
+
+Test case 'Check table 'BOOKSINFO' for the absence of NULL values in the fields'
+PASS. Result is '0' as expected
+	Query: SELECT count(*) FROM BOOKSINFO where book_name is null or number_of_letters is null or number_of_paragraph is null or number_of_words is null or words_in_lowercase is null or words_with_capital_letters is null
+
+Test case 'Check table 'Example' for the absence of NULL values in the fields'
+PASS. Result is '0' as expected
+	Query: SELECT count(*) FROM Example where word is null or count is null or count_uppercase is null
+
+Test case 'Check table 'Example' for data duplicate'
+PASS. Result is '0' as expected
+	Query: SELECT COUNT (*) FROM (SELECT count(*) FROM Example GROUP BY word HAVING count(*) > 1)

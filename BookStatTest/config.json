@@ -1,0 +1,9 @@
+{
+  "dev": {
+    "database": "C:\\Users\\sviatlana_sopat\\PycharmProjects\\run_project_bookstat\\bookstatbase.db",
+    "test_data_folder": "C:\\Users\\sviatlana_sopat\\PycharmProjects\\run_project_bookstat\\BookStatTest\\test_data"
+  },
+  "uat": {
+  }
+}
+

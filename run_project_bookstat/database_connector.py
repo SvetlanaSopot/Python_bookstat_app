@@ -12,19 +12,28 @@ class Database:
 
         return conn
 
-    def add_book_word_counts(self, book_id, counts):   # Insert calculated data into a new table
+    def add_book_word_counts(self, book_id, counts, counts_upp):   # Insert calculated data into a new table
         self.initialize_book_new_table(book_id)
 
         conn = self.connection()
         cursor = conn.cursor()
 
         for words in counts.keys():
-          #  print(words, counts[words])
+
+            #print(words, counts[words])
             add_counts = [(words, counts[words], 0)]
             cursor.executemany("INSERT INTO \"" + book_id + "\" VALUES (?,?,?)", add_counts)
 
         conn.commit()
+        for words in counts_upp.keys():
+            if words.istitle() is True:
 
+                #add_upp_counts = [(counts_upp[words], words)]
+                add_upp_counts = counts_upp[words]
+                add_upp = words
+                cursor.execute("UPDATE \"" + book_id + "\"  SET count_uppercase = ? WHERE word=?",
+                               (add_upp_counts, add_upp))
+        conn.commit()
 
     def initialize_book_new_table(self, table_name):   # initialize of new table
         print('Create books new table with name ' + table_name)
